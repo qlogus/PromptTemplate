@@ -1,0 +1,40 @@
+2026-10-03 17:02:37,551 ERROR provider revise HTTP 400 provider=agnes model=agnes-3.0-flash-thinking detail={"error":{"message":"Agnes model currently only supports public image URLs, not raw base64 data.","type":"invalid_request_error","code":"invalid_image_format"}}
+2026-10-03 17:51:57,383 ERROR provider models HTTP 401 endpoint=https://agnes.dockerspeeds.asia/v1/models detail={"error":{"message":"Missing API key. Provide it via Authorization: Bearer <key>, x-goog-api-key or x-api-key header","type":"authentication_error","code":"invalid_api_key"}}
+2026-10-03 18:43:02,639 INFO image request completed provider=image model=image-model route=/images/edits references=1
+2026-10-03 18:45:44,773 INFO image request completed provider=image model=image-model route=/images/edits references=1
+2026-10-03 18:47:03,604 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:47:03,643 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:47:03,692 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 18:51:33,981 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:51:34,037 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:51:34,079 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 18:57:10,138 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 18:57:10,401 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:57:10,564 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:57:10,605 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 18:57:55,649 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 18:57:55,837 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:57:55,876 INFO image request completed provider=image model=image route=/images/generations protocol=none references=0
+2026-10-03 18:57:55,915 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1
+2026-10-03 18:57:55,955 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:57:55,998 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 18:57:56,048 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 19:00:37,888 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 19:00:38,093 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 19:00:38,135 INFO image request completed provider=image model=image route=/images/generations protocol=none references=0
+2026-10-03 19:00:38,186 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1
+2026-10-03 19:00:38,238 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 19:00:38,279 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 19:00:38,326 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 19:06:10,621 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/edits protocol=multipart_edit references=1
+2026-10-03 19:07:22,440 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:10:58,654 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:13:24,073 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:16:26,005 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:19:34,280 ERROR image request HTTP 400 route=/images/generations detail={"error":{"message":"size has invalid value \"auto\"; must be one of: 1K, 2K, 3K, 4K, or WIDTHxHEIGHT (request id: 20261003111934886509612NomoGE8m)","type":"api_error","code":"invalid_request"}}
+2026-10-03 19:19:57,883 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:21:35,799 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:22:30,134 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:26:48,896 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:28:02,509 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 19:35:28,973 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
