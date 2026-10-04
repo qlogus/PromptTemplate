@@ -1,0 +1,31 @@
+.revision-panel { --workflow-strong: #6d28d9; --workflow-soft: #f0e7ff; --workflow-ink: #5721a6; }
+.generation-panel { --workflow-strong: #0f766e; --workflow-soft: #dff5f0; --workflow-ink: #115e59; }
+.video-panel { --workflow-strong: #b45309; --workflow-soft: #fff0d5; --workflow-ink: #92400e; }
+.media-player { display: block; width: min(100%, 640px); max-height: 440px; background: #171717; border-radius: 8px; }
+.video-jobs { margin-top: 22px; }
+.video-job { padding: 14px 0; border-top: 1px solid #eee; }
+.video-job > summary { cursor: pointer; padding: 8px 0; }
+.video-job [data-job-status] { overflow-wrap: anywhere; white-space: pre-wrap; }
+.submitted-prompt { white-space: pre-wrap; overflow-wrap: anywhere; }
+.generation-preset-shortcut { background: #dff5f0; color: #115e59; overflow-wrap: anywhere; text-align: left; }
+.workflow-panel > h2 { display: flex; align-items: center; gap: 10px; }
+.workflow-panel > h2::before { content: ''; width: 5px; height: 22px; border-radius: 4px; background: var(--workflow-strong); }
+.workflow-shortcut { background: var(--workflow-soft); color: var(--workflow-ink); overflow-wrap: anywhere; text-align: left; }
+.workflow-execute { background: var(--workflow-strong); color: white; margin-top: 18px; justify-self: start; min-width: 180px; font-weight: 600; }
+.workflow-panel button:focus-visible { outline: 3px solid var(--workflow-strong); outline-offset: 3px; }
+button:disabled { cursor: not-allowed; opacity: .55; }
+.preset-heading { justify-content: space-between; flex-wrap: wrap; }
+.preset-heading > span { overflow-wrap: anywhere; min-width: 0; }
+.preset-shortcuts { max-height: 180px; overflow-y: auto; }
+.preset-dialog { border: 0; border-radius: 12px; padding: 24px; width: min(600px, 92vw); max-height: 85vh; overflow-y: auto; color: #202124; }
+.preset-dialog::backdrop { background: #0007; }
+.preset-dialog h2 { font-size: 18px; margin: 0; }
+.ai-request { min-height: 190px; resize: vertical; }
+.example > .row button { flex-shrink: 0; white-space: nowrap; }
+.example > .row .field { min-width: 0; }
+.reference-controls { border: 0; padding: 0; margin: 0; min-width: 0; }
+.reference-controls > button { justify-self: start; }
+.reference-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.reference-name { flex: 1; min-width: 120px; overflow-wrap: anywhere; }
+.reference-thumbnail { width: 64px; height: 64px; object-fit: contain; background: #f4f5f7; transition: transform .15s; }
+.reference-thumbnail:hover { transform: scale(3); transform-origin: left center; position: relative; z-index: 8; }

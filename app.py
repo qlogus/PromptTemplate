@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import struct
 import base64
 import binascii
 import httpx
@@ -20,26 +21,59 @@ from typing import Any, Literal
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+from image_references import reference_files
+from example_store import ExampleInput, ExampleStore
+from media_store import MediaStore
+from video_models import VideoSettings, VideoInput, VideoExampleInput, RecoverVideoInput
+from video_service import VideoService
 
 ROOT = Path(__file__).resolve().parent
-DATA_DIR = ROOT / "data"
-STORAGE_DIR = ROOT / "storage"
+STATE_DIR = Path(os.environ.get('PROMPT_TEMPLATE_STATE_DIR', ROOT))
+DATA_DIR = STATE_DIR / "data"
+STORAGE_DIR = STATE_DIR / "storage"
 DB_PATH = DATA_DIR / "prompt_templates.sqlite3"
 STATIC_DIR = ROOT / "static"
 FFMPEG = os.environ.get("PROMPT_TEMPLATE_FFMPEG", "ffmpeg")
-LOG_DIR = ROOT / "logs"
+IMAGE_REQUEST_TIMEOUT = 300
+LOG_DIR = STATE_DIR / "logs"
 
-DATA_DIR.mkdir(exist_ok=True)
-STORAGE_DIR.mkdir(exist_ok=True)
-LOG_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True,exist_ok=True)
+STORAGE_DIR.mkdir(parents=True,exist_ok=True)
+LOG_DIR.mkdir(parents=True,exist_ok=True)
 
 logger = logging.getLogger("prompt_template")
 if not logger.handlers:
     logger.setLevel(logging.INFO)
     handler = RotatingFileHandler(LOG_DIR / "app.log", maxBytes=2_000_000, backupCount=3, encoding="utf-8")
     handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
-    logger.addHandler(handler)
+logger.addHandler(handler)
+
+
+def image_dimensions(encoded: str) -> tuple[int, int] | None:
+    try:
+        data = base64.b64decode(encoded, validate=True)
+    except (ValueError, binascii.Error):
+        return None
+    if data.startswith(b'\x89PNG\r\n\x1a\n') and len(data) >= 24:
+        return struct.unpack('>II', data[16:24])
+    if data.startswith(b'RIFF') and data[8:12] == b'WEBP' and data[12:16] == b'VP8X' and len(data) >= 30:
+        return (1 + int.from_bytes(data[24:27], 'little'), 1 + int.from_bytes(data[27:30], 'little'))
+    if data[:2] == b'\xff\xd8':
+        index = 2
+        while index + 9 < len(data):
+            if data[index] != 0xFF:
+                index += 1
+                continue
+            marker = data[index + 1]
+            index += 2
+            if marker in (0xD8, 0xD9):
+                continue
+            length = int.from_bytes(data[index:index + 2], 'big')
+            if marker in range(0xC0, 0xC4) and index + 7 < len(data):
+                return (int.from_bytes(data[index + 5:index + 7], 'big'), int.from_bytes(data[index + 3:index + 5], 'big'))
+            index += length
+    return None
 
 
 @contextmanager
@@ -84,8 +118,6 @@ def init_db() -> None:
                 input_text TEXT NOT NULL DEFAULT '',
                 output_text TEXT NOT NULL DEFAULT '',
                 notes TEXT NOT NULL DEFAULT '',
-                references_json TEXT NOT NULL DEFAULT '[]',
-                result_urls TEXT NOT NULL DEFAULT '[]',
                 rating INTEGER NOT NULL DEFAULT 0,
                 generator_model TEXT NOT NULL DEFAULT '',
                 seed TEXT NOT NULL DEFAULT '',
@@ -116,6 +148,18 @@ def init_db() -> None:
                 verify_tls INTEGER NOT NULL DEFAULT 1,
                 is_default INTEGER NOT NULL DEFAULT 0
             );
+            CREATE TABLE IF NOT EXISTS revision_presets (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE TABLE IF NOT EXISTS generation_presets (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
             CREATE VIRTUAL TABLE IF NOT EXISTS prompts_fts USING fts5(
                 prompt_id UNINDEXED, title, content, scenarios, notes, tags
             );
@@ -135,10 +179,22 @@ def init_db() -> None:
         for name, definition in (("reference_protocol", "TEXT NOT NULL DEFAULT 'multipart_edit'"), ("reference_endpoint", "TEXT NOT NULL DEFAULT '/images/edits'"), ("reference_field", "TEXT NOT NULL DEFAULT 'image'")):
             if name not in provider_columns:
                 db.execute(f"ALTER TABLE providers ADD COLUMN {name} {definition}")
+        if 'reference_limit' not in provider_columns:
+            db.execute('ALTER TABLE providers ADD COLUMN reference_limit INTEGER NOT NULL DEFAULT 1')
+            db.execute("UPDATE providers SET reference_limit=0,reference_protocol='multipart_edit' WHERE reference_protocol='none'")
+        if 'reference_format' not in provider_columns:
+            db.execute("ALTER TABLE providers ADD COLUMN reference_format TEXT NOT NULL DEFAULT 'single'")
         example_columns = {row[1] for row in db.execute("PRAGMA table_info(examples)")}
-        for name, definition in (("references_json", "TEXT NOT NULL DEFAULT '[]'"), ("result_urls", "TEXT NOT NULL DEFAULT '[]'"), ("rating", "INTEGER NOT NULL DEFAULT 0"), ("generator_model", "TEXT NOT NULL DEFAULT ''"), ("seed", "TEXT NOT NULL DEFAULT ''"), ("generation_params", "TEXT NOT NULL DEFAULT ''")):
+        for name, definition in (("rating", "INTEGER NOT NULL DEFAULT 0"), ("generator_model", "TEXT NOT NULL DEFAULT ''"), ("seed", "TEXT NOT NULL DEFAULT ''"), ("generation_params", "TEXT NOT NULL DEFAULT ''")):
             if name not in example_columns:
                 db.execute(f"ALTER TABLE examples ADD COLUMN {name} {definition}")
+        if 'video_settings' not in provider_columns:
+            db.execute("ALTER TABLE providers ADD COLUMN video_settings TEXT NOT NULL DEFAULT '{}'")
+        attachment_columns = {row[1] for row in db.execute('PRAGMA table_info(attachments)')}
+        if 'compressed_relative_path' not in attachment_columns:
+            db.execute("ALTER TABLE attachments ADD COLUMN compressed_relative_path TEXT NOT NULL DEFAULT ''")
+        ExampleStore.initialize(db)
+        VideoService.initialize(db)
         if "content" in columns:
             db.execute("UPDATE prompts SET content_zh=content WHERE content_zh='' AND content<>''")
 
@@ -151,6 +207,7 @@ def attachment_dict(row: sqlite3.Row) -> dict[str, Any]:
     item = dict(row)
     item["compressed"] = bool(item["compressed"])
     item["url"] = f"/media/{item['relative_path'].replace(os.sep, '/')}"
+    item['compressed_url'] = '/media/' + item['compressed_relative_path'] if item['compressed_relative_path'] else ''
     return item
 
 
@@ -160,10 +217,7 @@ def prompt_dict(db: sqlite3.Connection, row: sqlite3.Row, detailed: bool = False
     if detailed:
         examples = []
         for example in db.execute("SELECT * FROM examples WHERE prompt_id = ? ORDER BY position, id", (item["id"],)):
-            value = dict(example)
-            value["references"] = json.loads(value.pop("references_json", "[]"))
-            value["result_urls"] = json.loads(value.pop("result_urls", "[]"))
-            value["attachments"] = [attachment_dict(a) for a in db.execute("SELECT * FROM attachments WHERE example_id = ? ORDER BY created_at", (value["id"],))]
+            value = ExampleStore.get(db,example['id'])
             examples.append(value)
         item["examples"] = examples
         item["attachments"] = [attachment_dict(a) for a in db.execute("SELECT * FROM attachments WHERE prompt_id = ? ORDER BY created_at", (item["id"],))]
@@ -192,38 +246,39 @@ class PromptInput(BaseModel):
     tags: list[str] = []
 
 
-class ExampleInput(BaseModel):
-    title: str = "Example"
-    input_text: str = ""
-    output_text: str = ""
-    notes: str = ""
-    position: int = 0
-    references: list[str] = []
-    result_urls: list[str] = []
-    rating: int = Field(default=0, ge=0, le=5)
-    generator_model: str = ""
-    seed: str = ""
-    generation_params: str = ""
-
-
 class ProviderInput(BaseModel):
     name: str = Field(min_length=1)
     base_url: str = Field(min_length=1)
     model: str = Field(min_length=1)
     api_key: str = ""
     capabilities: list[str] = ["text"]
-    provider_kind: str = Field(default="text", pattern="^(text|multimodal|image)$")
+    provider_kind: Literal['text','multimodal','image','video'] = 'text'
+    video_settings: VideoSettings | None = None
     verify_tls: bool = True
     image_input: str = Field(default="both", pattern="^(url|base64|both)$")
     is_default: bool = False
-    reference_protocol: Literal['multipart_edit', 'json_url', 'none'] = 'multipart_edit'
+    reference_protocol: Literal['multipart_edit', 'json_url'] = 'multipart_edit'
     reference_endpoint: str = Field(default='/images/edits', pattern=r'^/[A-Za-z0-9_/-]+$')
-    reference_field: str = Field(default='image', pattern=r'^[A-Za-z_][A-Za-z0-9_]*$')
+    reference_field: str = Field(default='image', pattern=r'^[A-Za-z_][A-Za-z0-9_]*(\[\])?$')
+    reference_limit: int = Field(default=1, ge=0, le=32)
+    reference_format: Literal['single', 'array'] = 'single'
+
+    @model_validator(mode='after')
+    def validate_reference_settings(self):
+        if self.provider_kind == 'video':
+            self.video_settings = self.video_settings or VideoSettings()
+            return self
+        self.video_settings = None
+        if self.reference_limit > 1 and self.reference_format != 'array':
+            raise ValueError('多图必须选择列表提交格式')
+        if self.reference_protocol == 'json_url' and self.reference_field.endswith('[]'):
+            raise ValueError('JSON 参数名不使用 [] 后缀，请选择数组格式')
+        return self
 
     @field_validator('reference_field')
     @classmethod
     def validate_reference_field(cls, value: str) -> str:
-        if value in {'model', 'prompt', 'n', 'size'}:
+        if value.removesuffix('[]') in {'model', 'prompt', 'n', 'size'}:
             raise ValueError('参考图参数名不能覆盖 model、prompt、n 或 size')
         return value
 
@@ -235,6 +290,19 @@ class ProviderModelsInput(BaseModel):
     verify_tls: bool = True
 
 
+class RevisionPresetInput(BaseModel):
+    title: str = Field(min_length=1, max_length=120)
+    content: str = Field(min_length=1)
+
+    @field_validator('title', 'content', mode='before')
+    @classmethod
+    def strip_text(cls, value: Any) -> Any:
+        return value.strip() if isinstance(value, str) else value
+
+
+GenerationPresetInput = RevisionPresetInput
+
+
 class ReviseInput(BaseModel):
     prompt_id: str
     request: str = Field(min_length=1)
@@ -244,11 +312,11 @@ class ReviseInput(BaseModel):
 
 
 class GenerateImageInput(BaseModel):
+    model_config = {'extra': 'forbid'}
     prompt_id: str
     provider_id: str
     prompt: str = Field(min_length=1)
-    reference_urls: list[str] = []
-    reference_images: list[str] = []
+    references: list[str] = Field(default_factory=list, max_length=32)
     edit: bool = False
     size: str | None = Field(default=None, pattern=r'^(auto|[1-9][0-9]*x[1-9][0-9]*|)$', max_length=32)
 
@@ -268,11 +336,18 @@ def save_prompt(db: sqlite3.Connection, prompt_id: str, payload: PromptInput) ->
 app = FastAPI(title="Prompt Template Manager")
 app.mount("/media", StaticFiles(directory=STORAGE_DIR), name="media")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+video_service = VideoService(connect, STORAGE_DIR, DATA_DIR / 'video-cache', FFMPEG)
 
 
 @app.on_event("startup")
 def startup() -> None:
     init_db()
+    video_service.start()
+
+
+@app.on_event('shutdown')
+def shutdown() -> None:
+    video_service.stop()
 
 
 @app.get("/")
@@ -299,6 +374,68 @@ def list_prompts(q: str = "", category: str = "", tag: str = "", offset: int = 0
         safe_limit = max(1, min(100, limit))
         rows = db.execute(f"SELECT p.* FROM prompts p{where} ORDER BY p.updated_at DESC LIMIT ? OFFSET ?", [*params, safe_limit, safe_offset]).fetchall()
         return [prompt_dict(db, row) for row in rows]
+
+
+@app.get('/api/revision-presets')
+def list_revision_presets() -> list[dict[str, Any]]:
+    with connect() as db:
+        return [dict(row) for row in db.execute('SELECT id,title,content FROM revision_presets ORDER BY created_at,id')]
+
+
+@app.post('/api/revision-presets')
+def create_revision_preset(payload: RevisionPresetInput) -> dict[str, Any]:
+    preset = {'id': str(uuid.uuid4()), **payload.model_dump()}
+    with connect() as db:
+        db.execute('INSERT INTO revision_presets(id,title,content) VALUES(:id,:title,:content)', preset)
+    return preset
+
+
+@app.put('/api/revision-presets/{preset_id}')
+def update_revision_preset(preset_id: str, payload: RevisionPresetInput) -> dict[str, Any]:
+    with connect() as db:
+        cursor = db.execute('UPDATE revision_presets SET title=?,content=? WHERE id=?', (payload.title, payload.content, preset_id))
+        if not cursor.rowcount:
+            raise HTTPException(404, '常用建议不存在')
+    return {'id': preset_id, **payload.model_dump()}
+
+
+@app.delete('/api/revision-presets/{preset_id}')
+def delete_revision_preset(preset_id: str) -> dict[str, bool]:
+    with connect() as db:
+        if not db.execute('DELETE FROM revision_presets WHERE id=?', (preset_id,)).rowcount:
+            raise HTTPException(404, '常用建议不存在')
+    return {'ok': True}
+
+
+@app.get('/api/generation-presets')
+def list_generation_presets() -> list[dict[str, Any]]:
+    with connect() as db:
+        return [dict(row) for row in db.execute('SELECT id,title,content FROM generation_presets ORDER BY created_at,id')]
+
+
+@app.post('/api/generation-presets')
+def create_generation_preset(payload: GenerationPresetInput) -> dict[str, Any]:
+    preset = {'id': str(uuid.uuid4()), **payload.model_dump()}
+    with connect() as db:
+        db.execute('INSERT INTO generation_presets(id,title,content) VALUES(:id,:title,:content)', preset)
+    return preset
+
+
+@app.put('/api/generation-presets/{preset_id}')
+def update_generation_preset(preset_id: str, payload: GenerationPresetInput) -> dict[str, Any]:
+    with connect() as db:
+        cursor = db.execute('UPDATE generation_presets SET title=?,content=? WHERE id=?', (payload.title, payload.content, preset_id))
+        if not cursor.rowcount:
+            raise HTTPException(404, '生图模板不存在')
+    return {'id': preset_id, **payload.model_dump()}
+
+
+@app.delete('/api/generation-presets/{preset_id}')
+def delete_generation_preset(preset_id: str) -> dict[str, bool]:
+    with connect() as db:
+        if not db.execute('DELETE FROM generation_presets WHERE id=?', (preset_id,)).rowcount:
+            raise HTTPException(404, '生图模板不存在')
+    return {'ok': True}
 
 
 @app.post("/api/prompts")
@@ -332,52 +469,40 @@ def update_prompt(prompt_id: str, payload: PromptInput) -> dict[str, Any]:
 @app.delete("/api/prompts/{prompt_id}")
 def delete_prompt(prompt_id: str) -> dict[str, bool]:
     with connect() as db:
-        attachments = db.execute("SELECT relative_path FROM attachments WHERE prompt_id=? OR example_id IN (SELECT id FROM examples WHERE prompt_id=?)", (prompt_id, prompt_id)).fetchall()
+        if db.execute("SELECT 1 FROM video_jobs WHERE prompt_id=? AND status IN ('pending','submitting','queued','running','downloading')",(prompt_id,)).fetchone():
+            raise HTTPException(409,'该条目仍有视频任务进行中，请等待任务结束')
+        attachments = db.execute("SELECT relative_path FROM attachments WHERE prompt_id=? UNION SELECT compressed_relative_path FROM attachments WHERE prompt_id=? UNION SELECT relative_path FROM example_media WHERE example_id IN (SELECT id FROM examples WHERE prompt_id=?) UNION SELECT compressed_relative_path FROM example_media WHERE example_id IN (SELECT id FROM examples WHERE prompt_id=?)", (prompt_id,)*4).fetchall()
+        jobs = [row[0] for row in db.execute('SELECT id FROM video_jobs WHERE prompt_id=?',(prompt_id,))]
         if not db.execute("SELECT 1 FROM prompts WHERE id=?", (prompt_id,)).fetchone():
             raise HTTPException(404, "Prompt 不存在")
         db.execute("DELETE FROM prompts WHERE id=?", (prompt_id,))
         for row in attachments:
+            if not row[0]:
+                continue
             path = STORAGE_DIR / row[0]
             if path.is_file():
                 path.unlink()
+        for job_id in jobs:
+            shutil.rmtree(video_service.cache/job_id,ignore_errors=True)
         return {"ok": True}
 
 
 @app.post("/api/prompts/{prompt_id}/examples")
 def add_example(prompt_id: str, payload: ExampleInput) -> dict[str, Any]:
-    example_id = str(uuid.uuid4())
     with connect() as db:
-        if not db.execute("SELECT 1 FROM prompts WHERE id=?", (prompt_id,)).fetchone():
-            raise HTTPException(404, "Prompt 不存在")
-        db.execute("INSERT INTO examples(id,prompt_id,title,input_text,output_text,notes,references_json,result_urls,rating,generator_model,seed,generation_params,position) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", (example_id, prompt_id, payload.title, payload.input_text, payload.output_text, payload.notes, json.dumps(payload.references), json.dumps(payload.result_urls), payload.rating, payload.generator_model, payload.seed, payload.generation_params, payload.position))
-        return dict(db.execute("SELECT * FROM examples WHERE id=?", (example_id,)).fetchone()) | {"attachments": []}
+        return ExampleStore(connect,STORAGE_DIR).write(db,prompt_id,payload)
 
 
 @app.put("/api/examples/{example_id}")
 def update_example(example_id: str, payload: ExampleInput) -> dict[str, Any]:
     with connect() as db:
-        db.execute("UPDATE examples SET title=?,input_text=?,output_text=?,notes=?,references_json=?,result_urls=?,rating=?,generator_model=?,seed=?,generation_params=?,position=? WHERE id=?", (payload.title, payload.input_text, payload.output_text, payload.notes, json.dumps(payload.references), json.dumps(payload.result_urls), payload.rating, payload.generator_model, payload.seed, payload.generation_params, payload.position, example_id))
-        row = db.execute("SELECT * FROM examples WHERE id=?", (example_id,)).fetchone()
-        if not row:
-            raise HTTPException(404, "Example 不存在")
-        value = dict(row)
-        value["references"] = json.loads(value.pop("references_json", "[]"))
-        value["result_urls"] = json.loads(value.pop("result_urls", "[]"))
-        return value | {"attachments": [attachment_dict(a) for a in db.execute("SELECT * FROM attachments WHERE example_id=?", (example_id,))]}
+        current = ExampleStore.get(db,example_id)
+        return ExampleStore(connect,STORAGE_DIR).write(db,current['prompt_id'],payload,example_id)
 
 
 @app.delete("/api/examples/{example_id}")
 def delete_example(example_id: str) -> dict[str, bool]:
-    with connect() as db:
-        paths = db.execute("SELECT relative_path FROM attachments WHERE example_id=?", (example_id,)).fetchall()
-        if not db.execute("SELECT 1 FROM examples WHERE id=?", (example_id,)).fetchone():
-            raise HTTPException(404, "Example 不存在")
-        db.execute("DELETE FROM examples WHERE id=?", (example_id,))
-        for row in paths:
-            path = STORAGE_DIR / row[0]
-            if path.is_file():
-                path.unlink()
-        return {"ok": True}
+    return ExampleStore(connect,STORAGE_DIR).delete(example_id)
 
 
 @app.post("/api/prompts/{prompt_id}/attachments")
@@ -398,20 +523,16 @@ async def upload_attachment(prompt_id: str, file: UploadFile = File(...), origin
         status = "requested"
         compressed = False
         if compress and media_type.startswith("video/"):
-            compressed_path = destination.with_name(destination.stem + ".compressed" + destination.suffix)
-            try:
-                subprocess.run([FFMPEG, "-y", "-i", str(destination), "-c:v", "libx264", "-c:a", "aac", str(compressed_path)], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=600)
-                destination.unlink()
-                compressed_path.rename(destination)
-                compressed = True
-                status = "completed"
-            except (OSError, subprocess.SubprocessError):
-                status = "failed"
+            result = MediaStore(STORAGE_DIR,FFMPEG).compress(destination)
+            status = result['compression_status']
+            compressed = status == 'completed'
         elif compress and media_type.startswith("image/"):
             status = "unsupported_without_image_encoder"
         else:
             status = "not_requested"
         db.execute("INSERT INTO attachments(id,prompt_id,example_id,relative_path,original_path,media_type,size_bytes,compressed,compression_status) VALUES(?,?,?,?,?,?,?,?,?)", (attachment_id, prompt_id, example_id or None, relative.as_posix(), original_path, media_type, destination.stat().st_size, compressed, status))
+        if compress and media_type.startswith('video/'):
+            db.execute('UPDATE attachments SET compressed_relative_path=? WHERE id=?',(result['compressed_relative_path'],attachment_id))
         row = db.execute("SELECT * FROM attachments WHERE id=?", (attachment_id,)).fetchone()
         return attachment_dict(row)
 
@@ -451,20 +572,22 @@ def open_original_attachment(attachment_id: str) -> dict[str, bool]:
 @app.delete("/api/attachments/{attachment_id}")
 def delete_attachment(attachment_id: str) -> dict[str, bool]:
     with connect() as db:
-        row = db.execute("SELECT relative_path FROM attachments WHERE id=?", (attachment_id,)).fetchone()
+        row = db.execute("SELECT relative_path,compressed_relative_path FROM attachments WHERE id=?", (attachment_id,)).fetchone()
         if not row:
             raise HTTPException(404, "附件不存在")
         db.execute("DELETE FROM attachments WHERE id=?", (attachment_id,))
         path = STORAGE_DIR / row[0]
         if path.is_file():
             path.unlink()
+        if row['compressed_relative_path']:
+            (STORAGE_DIR / row['compressed_relative_path']).unlink(missing_ok=True)
         return {"ok": True}
 
 
 @app.get("/api/providers")
 def list_providers() -> list[dict[str, Any]]:
     with connect() as db:
-        return [{**dict(row), "api_key": "••••••••" if row["api_key"] else "", "capabilities": json.loads(row["capabilities"]), "verify_tls": bool(row["verify_tls"])} for row in db.execute("SELECT * FROM providers ORDER BY provider_kind, is_default DESC, name")]
+        return [{**dict(row), "api_key": "••••••••" if row["api_key"] else "", "capabilities": json.loads(row["capabilities"]), "verify_tls": bool(row["verify_tls"]), 'video_settings':json.loads(row['video_settings'])} for row in db.execute("SELECT * FROM providers ORDER BY provider_kind, is_default DESC, name")]
 
 
 @app.post("/api/providers")
@@ -475,8 +598,10 @@ def create_provider(payload: ProviderInput) -> dict[str, Any]:
             db.execute("UPDATE providers SET is_default=0 WHERE provider_kind=?", (payload.provider_kind,))
         image_input = payload.image_input if payload.provider_kind == "multimodal" else "both"
         db.execute("INSERT INTO providers(id,name,base_url,model,api_key,capabilities,provider_kind,image_input,verify_tls,is_default) VALUES(?,?,?,?,?,?,?,?,?,?)", (provider_id, payload.name, payload.base_url.rstrip("/"), payload.model, payload.api_key, json.dumps(payload.capabilities), payload.provider_kind, image_input, payload.verify_tls, payload.is_default))
-        db.execute("UPDATE providers SET reference_protocol=?,reference_endpoint=?,reference_field=? WHERE id=?", (payload.reference_protocol, payload.reference_endpoint, payload.reference_field, provider_id))
+        db.execute("UPDATE providers SET reference_protocol=?,reference_endpoint=?,reference_field=?,reference_limit=?,reference_format=? WHERE id=?", (payload.reference_protocol, payload.reference_endpoint, payload.reference_field, payload.reference_limit, payload.reference_format, provider_id))
+        db.execute('UPDATE providers SET video_settings=? WHERE id=?',(payload.video_settings.model_dump_json() if payload.video_settings else '{}',provider_id))
         row = dict(db.execute("SELECT * FROM providers WHERE id=?", (provider_id,)).fetchone())
+        row['video_settings'] = json.loads(row['video_settings'])
         row["capabilities"] = payload.capabilities
         row["api_key"] = "••••••••" if row["api_key"] else ""
         return row
@@ -493,8 +618,10 @@ def update_provider(provider_id: str, payload: ProviderInput) -> dict[str, Any]:
             db.execute("UPDATE providers SET is_default=0 WHERE provider_kind=?", (payload.provider_kind,))
         image_input = payload.image_input if payload.provider_kind == "multimodal" else "both"
         db.execute("UPDATE providers SET name=?,base_url=?,model=?,api_key=?,capabilities=?,provider_kind=?,image_input=?,verify_tls=?,is_default=? WHERE id=?", (payload.name, payload.base_url.rstrip("/"), payload.model, api_key, json.dumps(payload.capabilities), payload.provider_kind, image_input, payload.verify_tls, payload.is_default, provider_id))
-        db.execute("UPDATE providers SET reference_protocol=?,reference_endpoint=?,reference_field=? WHERE id=?", (payload.reference_protocol, payload.reference_endpoint, payload.reference_field, provider_id))
+        db.execute("UPDATE providers SET reference_protocol=?,reference_endpoint=?,reference_field=?,reference_limit=?,reference_format=? WHERE id=?", (payload.reference_protocol, payload.reference_endpoint, payload.reference_field, payload.reference_limit, payload.reference_format, provider_id))
+        db.execute('UPDATE providers SET video_settings=? WHERE id=?',(payload.video_settings.model_dump_json() if payload.video_settings else '{}',provider_id))
         row = dict(db.execute("SELECT * FROM providers WHERE id=?", (provider_id,)).fetchone())
+        row['video_settings'] = json.loads(row['video_settings'])
         row["capabilities"] = payload.capabilities
         row["api_key"] = "••••••••" if row["api_key"] else ""
         return row
@@ -505,6 +632,8 @@ def delete_provider(provider_id: str) -> dict[str, bool]:
     with connect() as db:
         if not db.execute("SELECT 1 FROM providers WHERE id=?", (provider_id,)).fetchone():
             raise HTTPException(404, "Provider 不存在")
+        if db.execute('SELECT 1 FROM video_jobs WHERE provider_id=?',(provider_id,)).fetchone():
+            raise HTTPException(409,'此 Provider 仍有视频任务记录，请先清除已结束的任务记录')
         db.execute("DELETE FROM providers WHERE id=?", (provider_id,))
         return {"ok": True}
 
@@ -594,65 +723,53 @@ def revise_prompt(payload: ReviseInput) -> dict[str, str]:
 
 @app.post("/api/generate/image")
 def generate_image(payload: GenerateImageInput) -> dict[str, Any]:
-    references = [url.strip() for url in payload.reference_urls if url.strip()]
-    reference_count = len(references) + len(payload.reference_images)
+    references = [value.strip() for value in payload.references]
+    reference_count = len(references)
     if payload.edit and not reference_count:
-        raise HTTPException(400, "Edit 需要一张参考图")
-    if reference_count > 1:
-        raise HTTPException(400, "当前图片编辑协议仅支持一张参考图，请选择一个文件或一个 URL")
-    if any(httpx.URL(url).scheme not in ("http", "https") for url in references):
-        raise HTTPException(400, "参考图必须使用 HTTP 或 HTTPS URL")
+        raise HTTPException(400, "Edit 需要至少一张参考图")
+    for index, reference in enumerate(references, 1):
+        if reference.startswith('data:image/'):
+            continue
+        try:
+            url = httpx.URL(reference)
+            if url.scheme not in ('http', 'https') or not url.host:
+                raise ValueError('invalid URL')
+        except (httpx.InvalidURL, ValueError) as exc:
+            raise HTTPException(400, f'图{index}：请使用 HTTP(S) 图片 URL 或上传图片') from exc
     with connect() as db:
         provider = db.execute("SELECT * FROM providers WHERE id=?", (payload.provider_id,)).fetchone()
         if not provider or provider["provider_kind"] != "image":
             raise HTTPException(400, "请选择图片生成 provider")
         protocol = provider['reference_protocol']
-        if reference_count and protocol == 'none':
-            raise HTTPException(400, '当前 provider 未启用参考图')
-        if payload.reference_images and protocol == 'json_url':
+        if reference_count > provider['reference_limit']:
+            raise HTTPException(400, f"当前 provider 最多支持 {provider['reference_limit']} 张参考图，已提交 {reference_count} 张")
+        if protocol == 'json_url' and any(value.startswith('data:') for value in references):
             raise HTTPException(400, '当前 provider 仅接受公网图片 URL')
         body = {"model": provider["model"], "prompt": payload.prompt, "n": 1}
         if payload.size:
             body['size'] = payload.size
-        route = (provider['reference_endpoint'] if protocol == 'json_url' else '/images/edits') if reference_count else '/images/generations'
+        route = provider['reference_endpoint'] if reference_count else '/images/generations'
         endpoint = provider_endpoint(provider["base_url"]).removesuffix("/chat/completions") + route
         headers = {"Authorization": f"Bearer {provider['api_key']}", "User-Agent": "Mozilla/5.0"}
         try:
-            with httpx.Client(verify=bool(provider["verify_tls"]), timeout=180) as client:
+            with httpx.Client(verify=bool(provider["verify_tls"]), timeout=IMAGE_REQUEST_TIMEOUT) as client:
                 if reference_count and protocol == 'multipart_edit':
-                    if references:
-                        with client.stream('GET', references[0], follow_redirects=True) as image:
-                            image.raise_for_status()
-                            media_type = image.headers.get('content-type', '').split(';')[0]
-                            image_bytes = bytearray()
-                            for chunk in image.iter_bytes():
-                                image_bytes.extend(chunk)
-                                if len(image_bytes) > 20 * 1024 * 1024:
-                                    raise HTTPException(400, '参考图片不能超过 20 MB')
-                    else:
-                        try:
-                            metadata, encoded = payload.reference_images[0].split(',', 1)
-                            if not metadata.startswith('data:image/') or not metadata.endswith(';base64'):
-                                raise ValueError('invalid image data URI')
-                            if len(encoded) > 28 * 1024 * 1024:
-                                raise ValueError('image too large')
-                            image_bytes = base64.b64decode(encoded, validate=True)
-                            media_type = metadata[5:-7]
-                        except (ValueError, binascii.Error) as exc:
-                            raise HTTPException(400, '上传图片格式错误或超过 20 MB') from exc
-                    if len(image_bytes) > 20 * 1024 * 1024:
-                        raise HTTPException(400, '参考图片不能超过 20 MB')
-                    if not media_type.startswith("image/"):
-                        raise HTTPException(400, "参考 URL 没有返回图片，请提供图片直链")
-                    extension = mimetypes.guess_extension(media_type) or ".png"
-                    response = client.post(endpoint, headers=headers, data={key: str(value) for key, value in body.items()}, files={"image": ("reference" + extension, bytes(image_bytes), media_type)})
+                    files = reference_files(client, references, provider['reference_field'])
+                    response = client.post(endpoint, headers=headers, data={key: str(value) for key, value in body.items()}, files=files)
                 else:
                     if references:
-                        body[provider['reference_field']] = references[0]
+                        body[provider['reference_field']] = references if provider['reference_format'] == 'array' else references[0]
                     response = client.post(endpoint, headers=headers, json=body)
                 response.raise_for_status()
                 raw = response.json()
-            logger.info("image request completed provider=%s model=%s route=%s protocol=%s references=%s", provider["name"], provider["model"], route, protocol, reference_count)
+            logger.info("image request completed provider=%s model=%s route=%s protocol=%s references=%s requested_size=%s response_status=%s response_count=%s response_keys=%s", provider["name"], provider["model"], route, protocol, reference_count, payload.size or 'provider_default', response.status_code, len(raw.get('data', [])) if isinstance(raw, dict) and isinstance(raw.get('data'), list) else 0, sorted(raw.keys()) if isinstance(raw, dict) else type(raw).__name__)
+            if isinstance(raw, dict) and isinstance(raw.get('data'), list):
+                for index, item in enumerate(raw['data'], 1):
+                    if not isinstance(item, dict):
+                        continue
+                    encoded = item.get('b64_json', '')
+                    dimensions = image_dimensions(encoded) if encoded else None
+                    logger.info("image response item=%s output=%s actual_size=%s", index, 'base64' if encoded else 'url' if item.get('url') else 'unknown', f'{dimensions[0]}x{dimensions[1]}' if dimensions else 'not_available')
         except httpx.HTTPStatusError as exc:
             detail = exc.response.text[:800]
             logger.error("image request HTTP %s route=%s detail=%s", exc.response.status_code, route, detail)
@@ -662,3 +779,43 @@ def generate_image(payload: GenerateImageInput) -> dict[str, Any]:
             raise HTTPException(502, "生图请求失败，请查看日志") from exc
         items = raw.get("data", []) if isinstance(raw, dict) else []
         return {"results": [{"url": item.get("url", ""), "b64_json": item.get("b64_json", "")} for item in items if isinstance(item, dict)]}
+
+
+@app.post('/api/video-jobs', status_code=202)
+def create_video_job(payload: VideoInput) -> dict:
+    return video_service.create(payload)
+
+
+@app.get('/api/video-jobs')
+def list_video_jobs(prompt_id: str) -> list[dict]:
+    return video_service.list(prompt_id)
+
+
+@app.get('/api/video-jobs/{job_id}')
+def get_video_job(job_id: str) -> dict:
+    return video_service.get(job_id)
+
+
+@app.post('/api/video-jobs/{job_id}/refresh')
+def refresh_video_job(job_id: str) -> dict:
+    return video_service.refresh(job_id)
+
+
+@app.post('/api/video-jobs/{job_id}/recover')
+def recover_video_job(job_id: str, payload: RecoverVideoInput) -> dict:
+    return video_service.recover(job_id,payload.remote_id)
+
+
+@app.get('/api/video-jobs/{job_id}/content')
+def video_job_content(job_id: str) -> FileResponse:
+    return FileResponse(video_service.content_path(job_id), media_type='video/mp4', filename='video.mp4', content_disposition_type='inline')
+
+
+@app.post('/api/video-jobs/{job_id}/example')
+def save_video_example(job_id: str, payload: VideoExampleInput) -> dict:
+    return video_service.save_example(job_id,payload)
+
+
+@app.delete('/api/video-jobs/{job_id}')
+def delete_video_job(job_id: str) -> dict:
+    return video_service.delete(job_id)

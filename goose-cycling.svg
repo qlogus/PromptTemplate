@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" role="img" aria-labelledby="title desc">
+  <title id="title">骑自行车的鹅</title>
+  <desc id="desc">侧视卡通鹅骑着红色自行车沿乡间道路前进。</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd8ff"/><stop offset="1" stop-color="#eefaff"/></linearGradient>
+    <linearGradient id="feather" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d4e0e8"/></linearGradient>
+  </defs>
+  <rect width="1000" height="650" fill="url(#sky)"/>
+  <circle cx="115" cy="105" r="48" fill="#fff" opacity=".78"/><circle cx="165" cy="108" r="36" fill="#fff" opacity=".78"/><circle cx="840" cy="120" r="42" fill="#fff" opacity=".7"/>
+  <path d="M0 405 C150 365 270 420 420 388 S720 355 1000 408 V650 H0Z" fill="#93ce75"/>
+  <path d="M0 510 C240 467 390 530 590 493 S835 470 1000 505 V650 H0Z" fill="#d6b36b"/>
+  <path d="M0 548 C235 510 390 566 600 530 S820 514 1000 545" fill="none" stroke="#f0d18c" stroke-width="15" opacity=".8"/>
+  <g stroke="#26384a" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="285" cy="492" r="91" fill="#eaf8ff" stroke-width="9"/><circle cx="735" cy="492" r="91" fill="#eaf8ff" stroke-width="9"/>
+    <circle cx="285" cy="492" r="9" fill="#26384a" stroke-width="5"/><circle cx="735" cy="492" r="9" fill="#26384a" stroke-width="5"/>
+    <path d="M285 492 L465 350 L575 492 L285 492 M465 350 L735 492 M575 492 L638 352 L735 492" fill="none" stroke="#d84b45" stroke-width="12"/>
+    <path d="M620 354 H690 M638 352 L620 329 M440 358 H492 M465 358 L450 334" fill="none" stroke-width="11"/>
+    <circle cx="465" cy="492" r="14" fill="#f3b538" stroke-width="6"/><path d="M465 492 L510 455 M465 492 L430 525" fill="none" stroke-width="8"/>
+    <path d="M423 318 C378 290 362 222 397 173 C432 123 513 117 563 156 C614 196 620 274 574 321 C536 359 470 353 423 318Z" fill="url(#feather)" stroke-width="10"/>
+    <path d="M436 292 C395 297 359 331 365 365 C371 400 414 410 448 373" fill="#c1d0db" stroke-width="9"/>
+    <path d="M448 369 L421 437 L379 468 M516 355 L562 418 L620 446" fill="none" stroke-width="13"/>
+    <path d="M379 468 L350 468 M620 446 L649 446" fill="none" stroke="#e99a25" stroke-width="13"/>
+    <path d="M487 157 C492 101 536 66 591 79 C638 90 666 131 658 168 C651 201 614 218 571 198Z" fill="#fff" stroke-width="10"/>
+    <path d="M641 121 C694 109 759 128 806 159 C766 188 703 193 651 174Z" fill="#f2a52d" stroke-width="10"/><path d="M800 159 L847 169 L805 181" fill="#dc7620" stroke-width="8"/>
+    <circle cx="624" cy="126" r="11" fill="#26384a" stroke-width="5"/><path d="M604 104 C625 90 648 94 662 107" fill="none" stroke-width="8"/>
+    <path d="M459 205 C499 225 542 224 576 202" fill="none" stroke="#e7eef2" stroke-width="17"/><path d="M457 207 L424 258 M576 204 L594 259" fill="none" stroke="#b3c4cf" stroke-width="14"/>
+    <path d="M424 258 L440 326 M594 259 L563 335" fill="none" stroke-width="11"/><circle cx="440" cy="328" r="10" fill="#f3b538" stroke-width="5"/><circle cx="563" cy="337" r="10" fill="#f3b538" stroke-width="5"/>
+    <path d="M430 330 L462 352 M553 337 L523 358" fill="none" stroke-width="8"/>
+  </g>
+  <g fill="#f4cc54" opacity=".9"><circle cx="92" cy="472" r="7"/><circle cx="128" cy="451" r="5"/><circle cx="900" cy="475" r="7"/><circle cx="930" cy="450" r="5"/></g>
+</svg>

@@ -10,12 +10,12 @@ import app
 
 class GenerationTests(unittest.TestCase):
     def test_size_forwarding_for_all_protocols(self):
-        for protocol, references in [('none', {}), ('json_url', {'reference_urls':['https://reference.test/a.png']}), ('multipart_edit', {'reference_images':['data:image/png;base64,aW1hZ2U=']})]:
+        for protocol, references in [('multipart_edit', {}), ('json_url', {'references':['https://reference.test/a.png']}), ('multipart_edit', {'references':['data:image/png;base64,aW1hZ2U=']})]:
             with self.subTest(protocol=protocol), tempfile.TemporaryDirectory() as directory, patch.object(app, 'DB_PATH', Path(directory) / 'db.sqlite'):
                 app.init_db()
                 provider = app.create_provider(app.ProviderInput(name='image', base_url='https://provider.test/v1', model='image', provider_kind='image', reference_protocol=protocol))
                 def upstream(request):
-                    if protocol == 'multipart_edit':
+                    if protocol == 'multipart_edit' and references:
                         self.assertIn(b'name="size"\r\n\r\n1536x1024', request.content)
                     else:
                         self.assertEqual(json.loads(request.content)['size'], '1536x1024')
@@ -57,7 +57,7 @@ class GenerationTests(unittest.TestCase):
                 self.assertEqual(json.loads(request.content)['image_url'], 'https://reference.test/a.png')
                 return httpx.Response(200, json={'data': [{'url': 'https://result.test/a.png'}]})
             with patch.object(app.httpx, 'Client', return_value=httpx.Client(transport=httpx.MockTransport(upstream))):
-                app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit', reference_urls=['https://reference.test/a.png']))
+                app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit', references=['https://reference.test/a.png']))
 
     def test_uploaded_image_is_sent_as_file(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(app, 'DB_PATH', None):
@@ -69,7 +69,7 @@ class GenerationTests(unittest.TestCase):
                 self.assertIn(b'image-bytes', request.content)
                 return httpx.Response(200, json={'data': [{'b64_json': 'aW1hZ2U='}]})
             with patch.object(app.httpx, 'Client', return_value=httpx.Client(transport=httpx.MockTransport(upstream))):
-                app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit', reference_images=['data:image/png;base64,aW1hZ2UtYnl0ZXM=']))
+                app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit', references=['data:image/png;base64,aW1hZ2UtYnl0ZXM=']))
 
     def test_reference_is_sent_as_file_without_persistence(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -89,7 +89,7 @@ class GenerationTests(unittest.TestCase):
                     return httpx.Response(200, json={'data': [{'url': 'https://result.test/image.png'}]})
                 client = httpx.Client(transport=httpx.MockTransport(upstream))
                 with patch.object(app.httpx, 'Client', return_value=client):
-                    result = app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit pose', reference_urls=['https://reference.test/image.png']))
+                    result = app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit pose', references=['https://reference.test/image.png']))
                 self.assertEqual(len(requests), 2)
                 self.assertEqual(len(result['results']), 1)
                 with app.connect() as db:
@@ -111,7 +111,7 @@ class GenerationTests(unittest.TestCase):
                 return httpx.Response(200, json={'data': [{'url': 'https://result.test/a.png'}]})
             with patch.object(app.httpx, 'Client', return_value=httpx.Client(transport=httpx.MockTransport(upstream))):
                 app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='generate'))
-            for values in ({'reference_images':['data:image/png;base64,aW1hZ2U=']}, {'reference_urls':['https://a.test/x','https://b.test/y']}):
+            for values in ({'references':['data:image/png;base64,aW1hZ2U=']}, {'references':['https://a.test/x','https://b.test/y']}):
                 with self.assertRaises(app.HTTPException) as error:
                     app.generate_image(app.GenerateImageInput(prompt_id='draft', provider_id=provider['id'], prompt='edit', **values))
                 self.assertEqual(error.exception.status_code, 400)

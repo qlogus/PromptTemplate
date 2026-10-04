@@ -38,3 +38,521 @@
 2026-10-03 19:26:48,896 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
 2026-10-03 19:28:02,509 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
 2026-10-03 19:35:28,973 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 20:38:08,279 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 20:39:18,325 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 20:40:14,057 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 21:09:27,653 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 21:14:12,499 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 21:18:01,165 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:08:36,975 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:09:27,345 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:09:56,178 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:11:22,648 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:35:50,246 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:37:32,302 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:40:20,616 INFO image request completed provider=test model=test route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:44:17,131 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=1
+2026-10-03 22:44:17,132 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=2
+2026-10-03 22:44:17,246 INFO image request completed provider=images model=test route=/images/edits protocol=multipart_edit references=2
+2026-10-03 22:44:18,016 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 22:44:18,225 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:44:18,349 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1
+2026-10-03 22:44:18,416 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:44:18,464 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:44:18,543 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 22:46:05,104 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=1
+2026-10-03 22:46:05,105 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=2
+2026-10-03 22:46:05,229 INFO image request completed provider=images model=test route=/images/edits protocol=multipart_edit references=2
+2026-10-03 22:46:06,005 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 22:46:06,208 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:46:06,262 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:46:06,313 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1
+2026-10-03 22:46:06,365 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:46:06,439 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:46:06,497 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 22:47:35,354 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=1
+2026-10-03 22:47:35,355 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=2
+2026-10-03 22:47:35,464 INFO image request completed provider=images model=test route=/images/edits protocol=multipart_edit references=2
+2026-10-03 22:47:37,948 ERROR image request failed route=/images/edits
+Traceback (most recent call last):
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+        pool_request.request
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\http11.py", line 86, in handle_request
+    self._send_request_headers(**kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\http11.py", line 144, in _send_request_headers
+    with map_exceptions({h11.LocalProtocolError: LocalProtocolError}):
+         ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\app.py", line 690, in generate_image
+    response = client.post(endpoint, headers=headers, data={key: str(value) for key, value in body.items()}, files=files)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1144, in post
+    return self.request(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.LocalProtocolError: Illegal header value b'Bearer '
+2026-10-03 22:49:19,350 ERROR image request failed route=/images/edits
+Traceback (most recent call last):
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+        pool_request.request
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\http11.py", line 86, in handle_request
+    self._send_request_headers(**kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_sync\http11.py", line 144, in _send_request_headers
+    with map_exceptions({h11.LocalProtocolError: LocalProtocolError}):
+         ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.LocalProtocolError: Illegal header value b'Bearer '
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\app.py", line 690, in generate_image
+    response = client.post(endpoint, headers=headers, data={key: str(value) for key, value in body.items()}, files=files)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1144, in post
+    return self.request(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.LocalProtocolError: Illegal header value b'Bearer '
+2026-10-03 22:52:34,196 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 22:52:34,420 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:52:34,483 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:52:34,547 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1
+2026-10-03 22:52:34,656 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:52:34,713 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:52:34,797 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 22:53:09,155 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0
+2026-10-03 22:53:09,409 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:53:09,474 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:53:09,538 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1
+2026-10-03 22:53:09,603 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:53:09,660 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1
+2026-10-03 22:53:09,717 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1
+2026-10-03 22:58:10,693 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 22:58:52,343 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:00:13,841 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:01:20,837 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:02:26,262 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:11:58,889 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:24:12,548 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:26:19,689 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:27:27,627 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0
+2026-10-03 23:47:46,443 INFO image request completed provider=瓦瓦 model=gpt-image-2.5-sunburst route=/images/edits protocol=multipart_edit references=2
+2026-10-04 00:02:20,329 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:02:20,329 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:02:20,540 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:02:20,540 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:02:20,600 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:02:20,678 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:02:20,738 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:02:20,794 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:02:20,794 INFO image response item=1 output=base64 actual_size=not_available
+2026-10-04 00:02:20,844 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:02:20,844 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:03:43,214 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:03:43,214 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:03:43,412 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:03:43,412 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:03:43,469 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:03:43,536 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:03:43,586 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:03:43,640 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:03:43,640 INFO image response item=1 output=base64 actual_size=not_available
+2026-10-04 00:03:43,721 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:03:43,721 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:18:54,175 ERROR image request HTTP 400 route=/images/edits detail={"error":{"code":"400","message":"您的请求无法用于生成图像。该请求可能因安全政策被拦截，或不适合进行图像生成。","type":"invalid_request_error"}}
+2026-10-04 00:20:38,389 INFO image request completed provider=瓦瓦 model=gpt-image-2.5-sunburst route=/images/edits protocol=multipart_edit references=2 requested_size=2560x1440 response_status=200 response_count=1 response_keys=['created', 'data', 'model', 'usage']
+2026-10-04 00:20:38,395 INFO image response item=1 output=base64 actual_size=2560x1440
+2026-10-04 00:24:42,475 INFO image request completed provider=瓦瓦 model=gpt-image-2.5-sunburst route=/images/edits protocol=multipart_edit references=1 requested_size=2560x1440 response_status=200 response_count=1 response_keys=['created', 'data', 'model', 'usage']
+2026-10-04 00:24:42,480 INFO image response item=1 output=base64 actual_size=2560x1440
+2026-10-04 00:34:56,317 ERROR image request HTTP 524 route=/images/edits detail=<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+<head>
+
+<title>wawapii.com | 524: A timeout occurred</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/main.css" />
+</head>
+<body>
+<div id="cf-wrapper">
+    <div id="cf-error-details" class="
+2026-10-04 00:45:31,759 INFO image request completed provider=瓦瓦 model=gpt-image-2.5-sunburst route=/images/edits protocol=multipart_edit references=1 requested_size=2560x1440 response_status=200 response_count=1 response_keys=['created', 'data', 'model', 'usage']
+2026-10-04 00:45:31,767 INFO image response item=1 output=base64 actual_size=2560x1440
+2026-10-04 00:46:03,587 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:46:03,587 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:46:03,866 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:46:03,866 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:46:03,946 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:46:04,014 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:46:04,082 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 00:46:04,161 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:46:04,161 INFO image response item=1 output=base64 actual_size=not_available
+2026-10-04 00:46:04,225 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 00:46:04,226 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 00:55:40,280 INFO image request completed provider=agnes-image model=agnes-image-2.5-flash route=/images/generations protocol=multipart_edit references=0 requested_size=provider_default response_status=200 response_count=1 response_keys=['created', 'data']
+2026-10-04 00:55:40,281 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 12:01:04,825 INFO video submitted job=a72acdcf-5b9b-4604-8d5f-0360997ad038 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:01:04,858 INFO video status job=a72acdcf-5b9b-4604-8d5f-0360997ad038 remote=task_123 status=downloading progress=100 metadata={'seconds': '5.04', 'size': '1152x768'}
+2026-10-04 12:01:09,168 INFO video cached job=a72acdcf-5b9b-4604-8d5f-0360997ad038 bytes=13 actual={}
+2026-10-04 12:01:09,273 INFO video submitted job=7cfb2551-51dd-4d1c-8e7a-4a62fc995af8 provider=direct model=agnes-video-v2.0 remote_id=video_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:01:09,279 INFO video status job=7cfb2551-51dd-4d1c-8e7a-4a62fc995af8 remote=video_123 status=downloading progress=None metadata={}
+2026-10-04 12:01:09,311 INFO video cached job=7cfb2551-51dd-4d1c-8e7a-4a62fc995af8 bytes=5 actual={}
+2026-10-04 12:01:09,388 INFO video submitted job=1ccb3aaf-f049-4b8a-8bd8-7218cc6db650 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:01:09,394 INFO video status job=1ccb3aaf-f049-4b8a-8bd8-7218cc6db650 remote=task_123 status=downloading progress=None metadata={}
+2026-10-04 12:01:09,399 ERROR video request failed job=1ccb3aaf-f049-4b8a-8bd8-7218cc6db650 status=download_failed
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 137, in advance
+    self.media.download(client,url,target,headers)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\PromptTemplate\media_store.py", line 44, in download
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Server error '503 Service Unavailable' for url 'https://upstream.test/v1/videos/task_123/content'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503
+2026-10-04 12:01:09,422 ERROR video request failed job=1ccb3aaf-f049-4b8a-8bd8-7218cc6db650 status=download_failed
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 137, in advance
+    self.media.download(client,url,target,headers)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\PromptTemplate\media_store.py", line 44, in download
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Server error '503 Service Unavailable' for url 'https://upstream.test/v1/videos/task_123/content'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503
+2026-10-04 12:01:09,503 INFO video submitted job=787f0555-c86b-4c6c-81cb-c226f153f6b5 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:01:09,509 INFO video status job=787f0555-c86b-4c6c-81cb-c226f153f6b5 remote=task_123 status=downloading progress=100 metadata={'seconds': '5.04', 'size': '1152x768'}
+2026-10-04 12:01:09,538 INFO video cached job=787f0555-c86b-4c6c-81cb-c226f153f6b5 bytes=13 actual={}
+2026-10-04 12:01:09,650 INFO video submitted job=55328fdd-33ec-477f-8a2a-233e0547e914 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=keyframes frames=161 fps=24 requested_size=1280x720
+2026-10-04 12:01:09,786 ERROR video request failed job=b9473a9f-3d5c-4259-baaf-b1548321a7da status=unknown
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 120, in advance
+    remote = adapter.submit(VideoInput.model_validate(job['request']))
+  File "E:\Misc\PromptTemplate\video_adapter.py", line 35, in submit
+    response = self.client.post(self.base + '/videos', headers=self.headers, json=body, timeout=300)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1144, in post
+    return self.request(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\mock.py", line 24, in handle_request
+    response = self.handler(request)
+  File "E:\Misc\PromptTemplate\tests\test_video.py", line 87, in upstream
+    raise httpx.ReadTimeout('timeout', request=request)
+httpx.ReadTimeout: timeout
+2026-10-04 12:07:28,079 INFO video submitted job=8efd12ee-2ab5-4c12-a1d8-86c02a4584a0 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:07:28,085 INFO video status job=8efd12ee-2ab5-4c12-a1d8-86c02a4584a0 remote=task_123 status=downloading progress=100 metadata={'seconds': '5.04', 'size': '1152x768'}
+2026-10-04 12:07:28,320 INFO video cached job=8efd12ee-2ab5-4c12-a1d8-86c02a4584a0 bytes=13 actual={}
+2026-10-04 12:07:28,437 INFO video submitted job=1dc6a658-2982-49f9-982b-006f21c501b1 provider=direct model=agnes-video-v2.0 remote_id=video_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:07:28,443 INFO video status job=1dc6a658-2982-49f9-982b-006f21c501b1 remote=video_123 status=downloading progress=None metadata={}
+2026-10-04 12:07:28,477 INFO video cached job=1dc6a658-2982-49f9-982b-006f21c501b1 bytes=5 actual={}
+2026-10-04 12:07:28,568 INFO video submitted job=914a2d11-494a-46e3-9f34-606cb7c5881e provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:07:28,575 INFO video status job=914a2d11-494a-46e3-9f34-606cb7c5881e remote=task_123 status=downloading progress=None metadata={}
+2026-10-04 12:07:28,581 ERROR video request failed job=914a2d11-494a-46e3-9f34-606cb7c5881e status=download_failed
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 138, in advance
+    self.media.download(client,url,target,headers)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\PromptTemplate\media_store.py", line 44, in download
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Server error '503 Service Unavailable' for url 'https://upstream.test/v1/videos/task_123/content'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503
+2026-10-04 12:07:28,594 ERROR video request failed job=914a2d11-494a-46e3-9f34-606cb7c5881e status=download_failed
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 138, in advance
+    self.media.download(client,url,target,headers)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\PromptTemplate\media_store.py", line 44, in download
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Server error '503 Service Unavailable' for url 'https://upstream.test/v1/videos/task_123/content'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503
+2026-10-04 12:07:28,664 INFO video submitted job=b5be2019-e2e0-4f1d-b3f3-e7591558ca87 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:07:28,670 INFO video status job=b5be2019-e2e0-4f1d-b3f3-e7591558ca87 remote=task_123 status=downloading progress=100 metadata={'seconds': '5.04', 'size': '1152x768'}
+2026-10-04 12:07:28,699 INFO video cached job=b5be2019-e2e0-4f1d-b3f3-e7591558ca87 bytes=13 actual={}
+2026-10-04 12:07:28,811 INFO video submitted job=c014da18-14c5-46af-a30d-b4dedc5272d8 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=keyframes frames=161 fps=24 requested_size=1280x720
+2026-10-04 12:07:28,945 ERROR video request failed job=7d1df0c0-6780-461f-afc5-69db07264dee status=unknown
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 121, in advance
+    remote = adapter.submit(VideoInput.model_validate(job['request']))
+  File "E:\Misc\PromptTemplate\video_adapter.py", line 35, in submit
+    response = self.client.post(self.base + '/videos', headers=self.headers, json=body, timeout=300)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1144, in post
+    return self.request(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\mock.py", line 24, in handle_request
+    response = self.handler(request)
+  File "E:\Misc\PromptTemplate\tests\test_video.py", line 87, in upstream
+    raise httpx.ReadTimeout('timeout', request=request)
+httpx.ReadTimeout: timeout
+2026-10-04 12:07:29,776 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=0 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 12:07:29,776 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 12:07:29,979 INFO image request completed provider=image model=image-model route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 12:07:29,979 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 12:07:30,044 INFO image request completed provider=image model=image route=/images/generations protocol=multipart_edit references=0 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 12:07:30,098 INFO image request completed provider=image model=image route=/images/edits protocol=json_url references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 12:07:30,161 INFO image request completed provider=image model=image route=/images/edits protocol=multipart_edit references=1 requested_size=1536x1024 response_status=200 response_count=0 response_keys=['data']
+2026-10-04 12:07:30,228 INFO image request completed provider=upload model=image route=/images/edits protocol=multipart_edit references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 12:07:30,228 INFO image response item=1 output=base64 actual_size=not_available
+2026-10-04 12:07:30,282 INFO image request completed provider=url model=image route=/images/generations protocol=json_url references=1 requested_size=provider_default response_status=200 response_count=1 response_keys=['data']
+2026-10-04 12:07:30,282 INFO image response item=1 output=url actual_size=not_available
+2026-10-04 12:12:58,805 INFO video submitted job=85a62225-7357-4769-8d6a-56de72bb6f8e provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:12:58,810 INFO video status job=85a62225-7357-4769-8d6a-56de72bb6f8e remote=task_123 status=downloading progress=100 metadata={'seconds': '5.04', 'size': '1152x768'}
+2026-10-04 12:12:59,050 INFO video cached job=85a62225-7357-4769-8d6a-56de72bb6f8e bytes=13 actual={}
+2026-10-04 12:12:59,133 INFO video submitted job=d9007df9-5176-4e47-85e7-bc2e68bde047 provider=direct model=agnes-video-v2.0 remote_id=video_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:12:59,138 INFO video status job=d9007df9-5176-4e47-85e7-bc2e68bde047 remote=video_123 status=downloading progress=None metadata={}
+2026-10-04 12:12:59,171 INFO video cached job=d9007df9-5176-4e47-85e7-bc2e68bde047 bytes=5 actual={}
+2026-10-04 12:12:59,244 INFO video submitted job=5885803f-473e-481c-863b-2f20a7ec8611 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:12:59,250 INFO video status job=5885803f-473e-481c-863b-2f20a7ec8611 remote=task_123 status=downloading progress=None metadata={}
+2026-10-04 12:12:59,255 ERROR video request failed job=5885803f-473e-481c-863b-2f20a7ec8611 status=download_failed
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 138, in advance
+    self.media.download(client,url,target,headers)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\PromptTemplate\media_store.py", line 44, in download
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Server error '503 Service Unavailable' for url 'https://upstream.test/v1/videos/task_123/content'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503
+2026-10-04 12:12:59,268 ERROR video request failed job=5885803f-473e-481c-863b-2f20a7ec8611 status=download_failed
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 138, in advance
+    self.media.download(client,url,target,headers)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\PromptTemplate\media_store.py", line 44, in download
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Server error '503 Service Unavailable' for url 'https://upstream.test/v1/videos/task_123/content'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503
+2026-10-04 12:12:59,351 INFO video submitted job=b42ca485-c1cf-4d14-b28e-162497f61063 provider=video model=agnes-video-v2.0 remote_id=task_123 mode=text frames=121 fps=24 requested_size=1152x768
+2026-10-04 12:12:59,361 INFO video status job=b42ca485-c1cf-4d14-b28e-162497f61063 remote=task_123 status=downloading progress=100 metadata={'seconds': '5.04', 'size': '1152x768'}
+2026-10-04 12:12:59,390 INFO video cached job=b42ca485-c1cf-4d14-b28e-162497f61063 bytes=13 actual={}
+2026-10-04 12:12:59,506 INFO video submitted job=61bc1e23-961d-4e3b-b434-6ab10a76f10f provider=video model=agnes-video-v2.0 remote_id=task_123 mode=keyframes frames=161 fps=24 requested_size=1280x720
+2026-10-04 12:12:59,648 ERROR video request failed job=b552ab32-cfcd-46b3-b769-fbedb8143682 status=unknown
+Traceback (most recent call last):
+  File "E:\Misc\PromptTemplate\video_service.py", line 121, in advance
+    remote = adapter.submit(VideoInput.model_validate(job['request']))
+  File "E:\Misc\PromptTemplate\video_adapter.py", line 35, in submit
+    response = self.client.post(self.base + '/videos', headers=self.headers, json=body, timeout=300)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1144, in post
+    return self.request(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Users\lx\AppData\Roaming\Python\Python314\site-packages\httpx\_transports\mock.py", line 24, in handle_request
+    response = self.handler(request)
+  File "E:\Misc\PromptTemplate\tests\test_video.py", line 87, in upstream
+    raise httpx.ReadTimeout('timeout', request=request)
+httpx.ReadTimeout: timeout
+2026-10-04 12:13:00,819 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=1 requested_size=provider_default response_status=200 response_count=0 response_keys=['data']
+2026-10-04 12:13:00,820 INFO image request completed provider=url model=test route=/images/edits protocol=json_url references=2 requested_size=provider_default response_status=200 response_count=0 response_keys=['data']
+2026-10-04 12:13:00,961 INFO image request completed provider=images model=test route=/images/edits protocol=multipart_edit references=2 requested_size=provider_default response_status=200 response_count=0 response_keys=['data']
+2026-10-04 17:05:09,933 INFO video submitted job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 provider=agnes-video-v2.0 model=agnes-video-v2.0 remote_id=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 mode=image frames=49 fps=24 requested_size=1152x768
+2026-10-04 17:05:22,108 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:05:33,921 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:05:46,065 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:05:59,726 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:06:11,766 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:06:23,719 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:06:25,310 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:06:31,534 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=running progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:06:37,615 INFO video status job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 remote=video_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm9wZW5haTttb2RlbF9pZDphZ25lcy12aWRlby12Mi4wO3ZpZGVvX2lkOnZpZGVvXzJmMzFmNDQxMjg4NTQ0OTk4YTc4MDVjMjllZjZhMDM0 status=downloading progress=None metadata={'model': 'agnes-video-v2.0', 'seconds': '5.0', 'size': '1088x832'}
+2026-10-04 17:06:44,603 INFO video cached job=6f10841b-b2f4-4a7a-b613-2940fbd0a658 bytes=1921474 actual={'width': 1088, 'height': 832, 'frame_rate': '24/1', 'duration': '5.041667'}
